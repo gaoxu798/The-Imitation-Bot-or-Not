@@ -23,7 +23,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <Header onShowHelp={() => setShowHelp(true)} />
       <main className="flex-1 flex flex-col items-center justify-center p-6">
         {/* Logo */}
         <div className="text-center mb-10">
@@ -38,26 +38,13 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* Buttons */}
-        <div className="flex items-center gap-4 mb-10">
-          <button
-            onClick={() => router.push("/game")}
-            className="neon-btn text-xl px-12 py-5 animate-pulse-glow glitch-hover"
-          >
-            START MATCH
-          </button>
-          <button
-            onClick={() => setShowHelp(true)}
-            className="neon-btn text-sm px-4 py-5"
-            style={{
-              borderColor: "rgba(157, 0, 255, 0.5)",
-              color: "#9D00FF",
-              background: "rgba(157, 0, 255, 0.1)",
-            }}
-          >
-            ?
-          </button>
-        </div>
+        {/* Start button */}
+        <button
+          onClick={() => router.push("/game")}
+          className="neon-btn text-xl px-12 py-5 animate-pulse-glow mb-10 glitch-hover"
+        >
+          START MATCH
+        </button>
 
         {/* Stats + Rank in a compact row */}
         {stats && (
@@ -115,23 +102,25 @@ export default function HomePage() {
           ))}
         </div>
 
+        {/* Contact */}
+        <div className="mt-4 text-xs font-mono text-text-gray text-center">
+          Contact:{" "}
+          <a href="mailto:nnianhuaa@outlook.com" className="text-neon-blue/60 hover:text-neon-blue transition-colors">
+            nnianhuaa@outlook.com
+          </a>
+        </div>
+
         {/* Guest notice */}
         {stats && stats.guestGamesLeft > 0 && (
-          <div className="mt-4 text-xs font-mono text-text-gray text-center">
+          <div className="mt-2 text-xs font-mono text-text-gray text-center">
             Guest mode: {stats.guestGamesLeft} free game{stats.guestGamesLeft !== 1 ? "s" : ""} remaining
           </div>
         )}
       </main>
 
       {/* Footer */}
-      <footer className="text-center py-4 text-xs text-text-gray font-mono border-t border-neon-blue/10 space-y-1">
-        <div>The Imitation © 2026 · v1.0 MVP</div>
-        <div>
-          Contact:{" "}
-          <a href="mailto:nnianhuaa@outlook.com" className="text-neon-blue/60 hover:text-neon-blue transition-colors">
-            nnianhuaa@outlook.com
-          </a>
-        </div>
+      <footer className="text-center py-4 text-xs text-text-gray font-mono border-t border-neon-blue/10">
+        The Imitation © 2026 · v1.0 MVP
       </footer>
 
       {/* How to Play Modal */}

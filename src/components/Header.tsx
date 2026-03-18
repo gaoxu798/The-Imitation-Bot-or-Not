@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { getPlayerStats } from "@/lib/game-storage";
 import { getRank } from "@/lib/game-types";
 
-export default function Header() {
+export default function Header({ onShowHelp }: { onShowHelp?: () => void }) {
   const [stats, setStats] = useState<ReturnType<typeof getPlayerStats> | null>(null);
 
   useEffect(() => {
@@ -47,6 +47,19 @@ export default function Header() {
         <Link href="/profile" className="text-sm text-text-gray hover:text-neon-blue transition-colors">
           Profile
         </Link>
+        {onShowHelp && (
+          <button
+            onClick={onShowHelp}
+            className="text-sm font-mono px-3 py-1 rounded border transition-colors"
+            style={{
+              borderColor: "rgba(157, 0, 255, 0.4)",
+              color: "#9D00FF",
+              background: "rgba(157, 0, 255, 0.08)",
+            }}
+          >
+            Guide
+          </button>
+        )}
       </div>
     </header>
   );
