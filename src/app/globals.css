@@ -1,0 +1,204 @@
+@import "tailwindcss";
+
+@theme {
+  --color-neon-blue: #00F0FF;
+  --color-neon-pink: #FF00FF;
+  --color-neon-purple: #9D00FF;
+  --color-neon-green: #00FF88;
+  --color-neon-red: #FF3366;
+  --color-bg-dark: #0A0A0F;
+  --color-bg-secondary: #151520;
+  --color-text-gray: #888888;
+
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --font-sans: 'Inter', 'Roboto', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, var(--color-bg-dark) 0%, var(--color-bg-secondary) 100%);
+  color: white;
+  font-family: var(--font-sans);
+  min-height: 100vh;
+}
+
+/* Cyberpunk grid background */
+.cyber-grid {
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Neon glow effects */
+.glow-blue {
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3), 0 0 30px rgba(0, 240, 255, 0.1);
+}
+.glow-pink {
+  box-shadow: 0 0 10px rgba(255, 0, 255, 0.3), 0 0 30px rgba(255, 0, 255, 0.1);
+}
+.glow-green {
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.3), 0 0 30px rgba(0, 255, 136, 0.1);
+}
+.glow-red {
+  box-shadow: 0 0 10px rgba(255, 51, 102, 0.3), 0 0 30px rgba(255, 51, 102, 0.1);
+}
+
+.text-glow-blue {
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 30px rgba(0, 240, 255, 0.2);
+}
+.text-glow-pink {
+  text-shadow: 0 0 10px rgba(255, 0, 255, 0.5), 0 0 30px rgba(255, 0, 255, 0.2);
+}
+.text-glow-green {
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5), 0 0 30px rgba(0, 255, 136, 0.2);
+}
+
+/* Glass morphism card */
+.glass-card {
+  background: rgba(21, 21, 32, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 240, 255, 0.15);
+  border-radius: 12px;
+}
+
+/* Neon button */
+.neon-btn {
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.5);
+  border-radius: 8px;
+  padding: 12px 32px;
+  color: #00F0FF;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.neon-btn:hover {
+  background: rgba(0, 240, 255, 0.2);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.4), 0 0 40px rgba(0, 240, 255, 0.1);
+  transform: translateY(-1px);
+}
+.neon-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.neon-btn-pink {
+  background: rgba(255, 0, 255, 0.1);
+  border-color: rgba(255, 0, 255, 0.5);
+  color: #FF00FF;
+}
+.neon-btn-pink:hover {
+  background: rgba(255, 0, 255, 0.2);
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.4), 0 0 40px rgba(255, 0, 255, 0.1);
+}
+
+/* Terminal input */
+.terminal-input {
+  background: rgba(10, 10, 15, 0.8);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #00F0FF;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.terminal-input:focus {
+  border-color: rgba(0, 240, 255, 0.7);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+}
+.terminal-input::placeholder {
+  color: rgba(0, 240, 255, 0.3);
+}
+
+/* CRT scanline effect */
+.scanlines {
+  position: relative;
+}
+.scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Pulse animation */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(0, 240, 255, 0.3), 0 0 30px rgba(0, 240, 255, 0.1); }
+  50% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.5), 0 0 50px rgba(0, 240, 255, 0.2); }
+}
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Breathing text glow */
+@keyframes breathe {
+  0%, 100% { opacity: 1; text-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+  50% { opacity: 0.8; text-shadow: 0 0 20px rgba(0, 240, 255, 0.8), 0 0 40px rgba(0, 240, 255, 0.3); }
+}
+.animate-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+/* Glitch effect */
+@keyframes glitch {
+  0%, 90%, 100% { transform: translate(0); }
+  92% { transform: translate(-2px, 1px); }
+  94% { transform: translate(2px, -1px); }
+  96% { transform: translate(-1px, -1px); }
+  98% { transform: translate(1px, 1px); }
+}
+.glitch-hover:hover {
+  animation: glitch 0.5s ease-in-out;
+}
+
+/* Energy bar */
+.energy-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(10, 10, 15, 0.8);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  overflow: hidden;
+}
+.energy-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #00F0FF, #00FF88);
+  transition: width 0.5s ease;
+}
+
+/* Countdown number glow */
+.countdown-glow {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 700;
+  color: #00F0FF;
+  text-shadow: 0 0 10px #00F0FF, 0 0 30px rgba(0, 240, 255, 0.5);
+}
+
+/* Result flash */
+@keyframes flash-green {
+  0%, 100% { background: transparent; }
+  50% { background: rgba(0, 255, 136, 0.1); }
+}
+@keyframes flash-red {
+  0%, 100% { background: transparent; }
+  50% { background: rgba(255, 51, 102, 0.1); }
+}
+.flash-correct { animation: flash-green 0.5s ease 3; }
+.flash-wrong { animation: flash-red 0.5s ease 3; }
