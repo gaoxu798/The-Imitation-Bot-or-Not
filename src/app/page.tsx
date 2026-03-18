@@ -37,6 +37,31 @@ export default function HomePage() {
           </p>
         </div>
 
+        {/* How to play */}
+        <div className="glass-card p-6 mb-8 max-w-2xl w-full">
+          <div className="text-sm font-mono text-neon-blue text-glow-blue mb-4 text-center uppercase tracking-wider">
+            How to Play
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-center">
+            {[
+              { step: "01", icon: "🔍", title: "Match", desc: "Join queue, get paired with AI or a real player" },
+              { step: "02", icon: "🎭", title: "Identity", desc: "You're assigned as Human or AI — keep it secret" },
+              { step: "03", icon: "💬", title: "Ask", desc: "3 questions, 2 min each — interrogate your opponent" },
+              { step: "04", icon: "🤔", title: "Guess", desc: "Bot, Human, or Unsure — make your call" },
+              { step: "05", icon: "🏆", title: "Score", desc: "+10 correct, -5 wrong, 0 unsure" },
+            ].map((item) => (
+              <div key={item.step} className="flex flex-col items-center gap-1 p-2">
+                <div className="text-2xl mb-1">{item.icon}</div>
+                <div className="text-xs font-mono text-neon-pink font-bold">{item.title}</div>
+                <div className="text-[11px] text-text-gray leading-tight">{item.desc}</div>
+              </div>
+            ))}
+          </div>
+          <div className="text-center text-[10px] text-text-gray/50 font-mono mt-3 border-t border-white/5 pt-3">
+            Please be respectful — violence, sexual content, and hate speech are strictly prohibited.
+          </div>
+        </div>
+
         {/* Start button */}
         <button
           onClick={() => router.push("/game")}
@@ -124,8 +149,14 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="text-center py-4 text-xs text-text-gray font-mono border-t border-neon-blue/10">
-        The Imitation © 2026 · v1.0 MVP
+      <footer className="text-center py-4 text-xs text-text-gray font-mono border-t border-neon-blue/10 space-y-1">
+        <div>The Imitation © 2026 · v1.0 MVP</div>
+        <div>
+          Contact:{" "}
+          <a href="mailto:nnianhuaa@outlook.com" className="text-neon-blue/60 hover:text-neon-blue transition-colors">
+            nnianhuaa@outlook.com
+          </a>
+        </div>
       </footer>
     </div>
   );

@@ -1,7 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isContentBlocked } from "@/lib/content-filter";
 
 export async function POST(request: NextRequest) {
   const { messages } = await request.json();
+
+  // Check if the user's latest message contains blocked content
+  const lastUserMsg = [...messages].reverse().find((m: { role: string }) => m.role === "user");
+  if (lastUserMsg && isContentBlocked(lastUserMsg.content)) {
+    return NextResponse.json({
+      answer: "dude what? lets keep it normal lol",
+    });
+  }
 
   const apiKey = process.env.DEEPSEEK_API_KEY;
   if (!apiKey) {
@@ -36,7 +45,12 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await response.json();
-    const answer = data.choices?.[0]?.message?.content || "...";
+    let answer = data.choices?.[0]?.message?.content || "...";
+
+    // Filter AI response as well
+    if (isContentBlocked(answer)) {
+      answer = "haha nice try, ask me something else";
+    }
 
     return NextResponse.json({ answer });
   } catch (error) {

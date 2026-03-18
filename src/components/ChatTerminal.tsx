@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Message, MAX_QUESTIONS } from "@/lib/game-types";
+import { isContentBlocked, CONTENT_WARNING } from "@/lib/content-filter";
 
 interface Props {
   messages: Message[];
@@ -19,6 +20,7 @@ export default function ChatTerminal({
   onSendQuestion,
 }: Props) {
   const [input, setInput] = useState("");
+  const [warning, setWarning] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const canAsk = questionCount < MAX_QUESTIONS && !waitingForAnswer;
 
@@ -29,6 +31,12 @@ export default function ChatTerminal({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || !canAsk) return;
+    if (isContentBlocked(input)) {
+      setWarning(CONTENT_WARNING);
+      setTimeout(() => setWarning(""), 3000);
+      return;
+    }
+    setWarning("");
     onSendQuestion(input.trim());
     setInput("");
   };
@@ -133,7 +141,12 @@ export default function ChatTerminal({
             ASK
           </button>
         </div>
-        {canAsk && (
+        {warning && (
+          <div className="text-xs text-neon-red font-mono mt-2 pl-2">
+            {warning}
+          </div>
+        )}
+        {canAsk && !warning && (
           <div className="text-xs text-text-gray font-mono mt-2 pl-2">
             {MAX_QUESTIONS - questionCount} question{MAX_QUESTIONS - questionCount !== 1 ? "s" : ""} remaining
           </div>
