@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import CyberBackground from "@/components/CyberBackground";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -19,7 +20,8 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="cyber-grid min-h-screen antialiased">
+      <body className="min-h-screen antialiased">
+        <CyberBackground />
         {children}
       </body>
     </html>

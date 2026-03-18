@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getPlayerStats } from "@/lib/game-storage";
-import { PlayerStats, getRank } from "@/lib/game-types";
+import { PlayerStats, getRank, RANKS } from "@/lib/game-types";
 import Header from "@/components/Header";
 
 export default function HomePage() {
@@ -83,6 +83,37 @@ export default function HomePage() {
             </div>
           </div>
         )}
+
+        {/* Rank table */}
+        <div className="glass-card p-6 mt-8 max-w-2xl w-full">
+          <div className="text-sm font-mono text-neon-blue text-glow-blue mb-4 text-center uppercase tracking-wider">
+            Rank Tiers
+          </div>
+          <div className="grid grid-cols-7 gap-2">
+            {RANKS.map((r) => (
+              <div
+                key={r.tier}
+                className={`text-center p-3 rounded-lg border ${
+                  rank?.tier === r.tier
+                    ? "border-neon-pink/50 bg-neon-pink/10"
+                    : "border-white/5 bg-white/[0.02]"
+                }`}
+              >
+                <div className={`text-xs font-mono font-bold mb-1 ${
+                  rank?.tier === r.tier ? "text-neon-pink" : "text-white/80"
+                }`}>
+                  {r.tier}
+                </div>
+                <div className="text-[10px] text-text-gray">{r.label}</div>
+                <div className={`text-xs font-mono mt-1 ${
+                  rank?.tier === r.tier ? "text-neon-pink" : "text-neon-blue/60"
+                }`}>
+                  {r.minScore}+
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Guest notice */}
         {stats && stats.guestGamesLeft > 0 && (
