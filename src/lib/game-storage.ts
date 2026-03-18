@@ -1,4 +1,4 @@
-import { PlayerStats, MAX_STAMINA, GUEST_FREE_GAMES } from "./game-types";
+import { PlayerStats, MAX_STAMINA, GUEST_FREE_GAMES, STAMINA_RECOVERY_PER_MIN } from "./game-types";
 
 const STORAGE_KEY = "imitation_player";
 
@@ -13,7 +13,7 @@ export function getPlayerStats(): PlayerStats {
   const lastUpdate = localStorage.getItem(STORAGE_KEY + "_time");
   if (lastUpdate) {
     const elapsed = (Date.now() - parseInt(lastUpdate)) / 60000; // minutes
-    stats.stamina = Math.min(stats.maxStamina, stats.stamina + Math.floor(elapsed * 2));
+    stats.stamina = Math.min(stats.maxStamina, stats.stamina + Math.floor(elapsed * STAMINA_RECOVERY_PER_MIN));
   }
   return stats;
 }

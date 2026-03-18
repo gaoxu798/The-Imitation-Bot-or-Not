@@ -110,7 +110,7 @@ export default function ProfilePage() {
             />
           </div>
           <div className="text-xs text-text-gray mt-1 font-mono">
-            Recovery: 2 pts/min
+            Recovery: 5 pts/min
           </div>
         </div>
 

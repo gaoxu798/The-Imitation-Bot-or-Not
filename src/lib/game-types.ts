@@ -73,7 +73,7 @@ export function getRank(score: number): RankInfo {
 }
 
 export const STAMINA_PER_GAME = 10;
-export const STAMINA_RECOVERY_PER_MIN = 2;
+export const STAMINA_RECOVERY_PER_MIN = 5;
 export const MAX_STAMINA = 50;
 export const GUEST_FREE_GAMES = 5;
 export const MAX_QUESTIONS = 3;

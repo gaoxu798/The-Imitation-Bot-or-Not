@@ -46,14 +46,14 @@ export default function Header({ onShowHelp }: { onShowHelp?: () => void }) {
         )}
         <Link
           href="/profile"
-          className="font-mono text-sm font-semibold px-5 py-2 rounded-lg border border-neon-pink/50 bg-neon-pink/10 text-neon-pink hover:bg-neon-pink/20 hover:shadow-[0_0_15px_rgba(255,0,255,0.3)] transition-all"
+          className="font-mono text-base font-bold px-6 py-2.5 rounded-lg border-2 border-neon-pink bg-neon-pink/15 text-neon-pink shadow-[0_0_12px_rgba(255,0,255,0.3)] hover:bg-neon-pink/30 hover:shadow-[0_0_25px_rgba(255,0,255,0.5)] transition-all"
         >
           Profile
         </Link>
         {onShowHelp && (
           <button
             onClick={onShowHelp}
-            className="font-mono text-sm font-semibold px-5 py-2 rounded-lg border border-neon-purple/50 bg-neon-purple/10 text-neon-purple hover:bg-neon-purple/20 hover:shadow-[0_0_15px_rgba(157,0,255,0.3)] transition-all"
+            className="font-mono text-base font-bold px-6 py-2.5 rounded-lg border-2 border-neon-purple bg-neon-purple/15 text-neon-purple shadow-[0_0_12px_rgba(157,0,255,0.3)] hover:bg-neon-purple/30 hover:shadow-[0_0_25px_rgba(157,0,255,0.5)] transition-all"
           >
             Guide
           </button>
