@@ -51,10 +51,12 @@ export default function ProfilePage() {
     window.paypal
       .Buttons({
         style: { color: "blue", shape: "rect", label: "pay", height: 44 },
-        createOrder: (_: any, actions: any) => {
+        createOrder: async (_: any, actions: any) => {
+          const { data: sessionData } = await supabase.auth.getSession();
+          const userId = sessionData.session?.user?.id ?? "";
           return actions.order.create({
             purchase_units: [
-              { amount: { value: "5.90", currency_code: "USD" } },
+              { amount: { value: "5.90", currency_code: "USD" }, custom_id: userId },
             ],
           });
         },
