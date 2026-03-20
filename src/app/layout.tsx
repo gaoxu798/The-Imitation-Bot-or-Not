@@ -5,6 +5,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "The Imitation - Bot or Not",
   description: "Can you tell bot from human?",
+  icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({
