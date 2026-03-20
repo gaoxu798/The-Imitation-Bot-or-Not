@@ -5,7 +5,7 @@ async function getPayPalAccessToken(): Promise<string> {
   const credentials = Buffer.from(
     `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
   ).toString("base64");
-  const res = await fetch("https://api-m.sandbox.paypal.com/v1/oauth2/token", {
+  const res = await fetch("https://api-m.paypal.com/v1/oauth2/token", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -23,7 +23,7 @@ async function verifySignature(
   accessToken: string
 ): Promise<boolean> {
   const res = await fetch(
-    "https://api-m.sandbox.paypal.com/v1/notifications/verify-webhook-signature",
+    "https://api-m.paypal.com/v1/notifications/verify-webhook-signature",
     {
       method: "POST",
       headers: {

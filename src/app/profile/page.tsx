@@ -117,7 +117,7 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Script
-        src={`https://www.sandbox.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&currency=USD`}
+        src={`https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&currency=USD`}
         onLoad={() => setPaypalReady(true)}
       />
       <Header />
