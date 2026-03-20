@@ -6,7 +6,7 @@ async function getPayPalAccessToken(): Promise<string> {
     `${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`
   ).toString("base64");
 
-  const res = await fetch("https://api.paypal.com/v1/oauth2/token", {
+  const res = await fetch("https://api-m.sandbox.paypal.com/v1/oauth2/token", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
 
     // 2. Capture order
     const captureRes = await fetch(
-      `https://api.paypal.com/v2/checkout/orders/${orderId}/capture`,
+      `https://api-m.sandbox.paypal.com/v2/checkout/orders/${orderId}/capture`,
       {
         method: "POST",
         headers: {
