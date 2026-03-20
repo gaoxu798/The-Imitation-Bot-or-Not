@@ -11,6 +11,7 @@ import {
   MAX_QUESTIONS,
   ANSWER_TIME_LIMIT,
   SCORE_CORRECT,
+  SCORE_CORRECT_PREMIUM,
   SCORE_WRONG,
   SCORE_UNSURE,
   STAMINA_PER_GAME,
@@ -217,16 +218,15 @@ export function useGame() {
         (guess === "bot" && state.opponentType === "ai") ||
         (guess === "human" && state.opponentType === "real");
 
+      // Update stats
+      const stats = getPlayerStats();
       if (guess === "unsure") {
         scoreChange = SCORE_UNSURE;
       } else if (isCorrect) {
-        scoreChange = SCORE_CORRECT;
+        scoreChange = stats.isPremium ? SCORE_CORRECT_PREMIUM : SCORE_CORRECT;
       } else {
         scoreChange = SCORE_WRONG;
       }
-
-      // Update stats
-      const stats = getPlayerStats();
       stats.totalGames += 1;
       stats.score = Math.max(0, stats.score + scoreChange);
       if (guess !== "unsure") {

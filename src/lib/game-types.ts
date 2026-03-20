@@ -79,5 +79,6 @@ export const GUEST_FREE_GAMES = 5;
 export const MAX_QUESTIONS = 3;
 export const ANSWER_TIME_LIMIT = 120; // seconds
 export const SCORE_CORRECT = 10;
+export const SCORE_CORRECT_PREMIUM = 20;
 export const SCORE_WRONG = -5;
 export const SCORE_UNSURE = 0;

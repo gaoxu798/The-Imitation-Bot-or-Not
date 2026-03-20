@@ -1,17 +1,99 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { getPlayerStats } from "@/lib/game-storage";
+import Script from "next/script";
+import { getPlayerStats, savePlayerStats } from "@/lib/game-storage";
 import { PlayerStats, getRank, RANKS } from "@/lib/game-types";
 import Header from "@/components/Header";
+import { supabase } from "@/lib/supabase";
+
+declare global {
+  interface Window {
+    paypal: any;
+  }
+}
 
 export default function ProfilePage() {
   const [stats, setStats] = useState<PlayerStats | null>(null);
+  const [paypalReady, setPaypalReady] = useState(false);
+  const [paying, setPaying] = useState(false);
+  const paypalRef = useRef<HTMLDivElement>(null);
+  const paypalRendered = useRef(false);
 
   useEffect(() => {
-    setStats(getPlayerStats());
+    const localStats = getPlayerStats();
+    setStats(localStats);
+
+    // Sync premium status from Supabase
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) {
+        supabase
+          .from("profiles")
+          .select("is_premium")
+          .eq("id", data.user.id)
+          .single()
+          .then(({ data: profile }) => {
+            if (profile?.is_premium && !localStats.isPremium) {
+              localStats.isPremium = true;
+              savePlayerStats(localStats);
+              setStats({ ...localStats });
+            }
+          });
+      }
+    });
   }, []);
+
+  useEffect(() => {
+    if (!paypalReady || !paypalRef.current || paypalRendered.current || stats?.isPremium) return;
+    paypalRendered.current = true;
+
+    window.paypal
+      .Buttons({
+        style: { color: "blue", shape: "rect", label: "pay", height: 44 },
+        createOrder: (_: any, actions: any) => {
+          return actions.order.create({
+            purchase_units: [
+              { amount: { value: "5.90", currency_code: "USD" } },
+            ],
+          });
+        },
+        onApprove: async (data: any) => {
+          setPaying(true);
+          try {
+            const { data: sessionData } = await supabase.auth.getSession();
+            const accessToken = sessionData.session?.access_token;
+
+            if (!accessToken) {
+              alert("请先登录账号再购买！");
+              return;
+            }
+
+            const res = await fetch("/api/payment/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ orderId: data.orderID, accessToken }),
+            });
+
+            if (res.ok) {
+              const current = getPlayerStats();
+              current.isPremium = true;
+              current.stamina = current.maxStamina;
+              savePlayerStats(current);
+              setStats({ ...current });
+            } else {
+              alert("支付验证失败，请联系客服。");
+            }
+          } finally {
+            setPaying(false);
+          }
+        },
+        onError: () => {
+          alert("支付出现错误，请重试。");
+        },
+      })
+      .render(paypalRef.current);
+  }, [paypalReady, stats?.isPremium]);
 
   if (!stats) return null;
 
@@ -21,7 +103,6 @@ export default function ProfilePage() {
       ? Math.round((stats.wins / stats.totalGames) * 100)
       : 0;
 
-  // Find next rank
   const currentRankIndex = RANKS.findIndex((r) => r.tier === rank.tier);
   const nextRank = currentRankIndex < RANKS.length - 1 ? RANKS[currentRankIndex + 1] : null;
   const progressToNext = nextRank
@@ -33,6 +114,10 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Script
+        src={`https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID}&currency=USD`}
+        onLoad={() => setPaypalReady(true)}
+      />
       <Header />
       <main className="flex-1 p-6 max-w-2xl mx-auto w-full">
         <h1 className="text-2xl font-mono font-bold text-neon-blue text-glow-blue mb-8">
@@ -98,34 +183,47 @@ export default function ProfilePage() {
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-mono text-text-gray">Stamina</span>
             <span className="font-mono text-neon-blue text-sm">
-              {stats.stamina} / {stats.maxStamina}
+              {stats.isPremium ? "∞" : `${stats.stamina} / ${stats.maxStamina}`}
             </span>
           </div>
-          <div className="energy-bar">
-            <div
-              className="energy-bar-fill"
-              style={{
-                width: `${(stats.stamina / stats.maxStamina) * 100}%`,
-              }}
-            />
-          </div>
+          {!stats.isPremium && (
+            <div className="energy-bar">
+              <div
+                className="energy-bar-fill"
+                style={{ width: `${(stats.stamina / stats.maxStamina) * 100}%` }}
+              />
+            </div>
+          )}
           <div className="text-xs text-text-gray mt-1 font-mono">
-            Recovery: 5 pts/min
+            {stats.isPremium ? "Unlimited — Premium member" : "Recovery: 5 pts/min"}
           </div>
         </div>
 
-        {/* Premium */}
-        {!stats.isPremium && (
-          <div className="glass-card p-6 text-center glow-pink mb-6">
-            <div className="text-lg font-mono font-bold text-neon-pink mb-2">
+        {/* Premium card */}
+        {stats.isPremium ? (
+          <div className="glass-card p-6 text-center glow-blue mb-6">
+            <div className="text-lg font-mono font-bold text-neon-blue mb-1">
+              ★ PREMIUM MEMBER
+            </div>
+            <div className="text-sm text-text-gray">
+              无限体力 · 赢局+20分 · 无广告
+            </div>
+          </div>
+        ) : (
+          <div className="glass-card p-6 glow-pink mb-6">
+            <div className="text-lg font-mono font-bold text-neon-pink mb-1 text-center">
               GO PREMIUM
             </div>
-            <div className="text-sm text-text-gray mb-4">
-              Unlimited stamina · $5.9/month
+            <div className="text-sm text-text-gray text-center mb-4">
+              无限体力 · 赢局+20分（普通+10）· 无广告 · 一次性 $5.90
             </div>
-            <button className="neon-btn neon-btn-pink">
-              UPGRADE NOW
-            </button>
+            {paying ? (
+              <div className="text-center text-neon-blue font-mono text-sm animate-pulse">
+                处理中...
+              </div>
+            ) : (
+              <div ref={paypalRef} />
+            )}
           </div>
         )}
 
@@ -142,9 +240,7 @@ export default function ProfilePage() {
                     : "text-text-gray"
                 }`}
               >
-                <span>
-                  {r.tier} ({r.label})
-                </span>
+                <span>{r.tier} ({r.label})</span>
                 <span>{r.minScore}+</span>
               </div>
             ))}
